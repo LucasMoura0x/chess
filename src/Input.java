@@ -1,5 +1,6 @@
 import Pieces.Pieces;
 
+import javax.swing.JOptionPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -7,7 +8,7 @@ public class Input extends MouseAdapter {
 
     Board board;
 
-    public Input(Board board){
+    public Input(Board board) {
         this.board = board;
     }
 
@@ -21,7 +22,10 @@ public class Input extends MouseAdapter {
         if (clicked != null) {
             board.selectedPiece = clicked;
         }
+
+        board.repaint();
     }
+
 
     public void mouseReleased(MouseEvent e) {
 
@@ -36,15 +40,43 @@ public class Input extends MouseAdapter {
 
                 board.makeMove(move);
 
-            } else {
+                // ----------------------------
+                // CHEQUE-MATE
+                // ----------------------------
+                boolean enemyIsWhite = !board.selectedPiece.isWhite;
 
-                // Volta peça para o lugar original
+                if (board.isCheckmate(enemyIsWhite)) {
+
+                    String winner = board.selectedPiece.isWhite ? "Brancas" : "Pretas";
+
+                    JOptionPane.showMessageDialog(
+                            board,
+                            "Cheque-mate!\nVitória das peças " + winner,
+                            "Fim de jogo",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    System.exit(0);
+                }
+
+            } else {
+                // Volta a peça
                 board.selectedPiece.xPos = board.selectedPiece.col * board.tileSize;
                 board.selectedPiece.yPos = board.selectedPiece.row * board.tileSize;
             }
+
+            board.selectedPiece = null;
         }
 
-        board.selectedPiece = null;
         board.repaint();
+    }
+
+
+    public void mouseMoved(MouseEvent e) {
+        if (board.selectedPiece != null) {
+            board.mouseX = e.getX();
+            board.mouseY = e.getY();
+            board.repaint();
+        }
     }
 }

@@ -27,6 +27,12 @@ public class Pieces {
 
         loadSprite(); // 🔥 Carrega automaticamente a imagem correspondente
     }
+    public boolean isValidMovement(int col, int row){
+        return true;
+    }
+    public boolean moveColldesWhitePieces(int col, int row){
+        return false;
+    }
 
     private void loadSprite() {
         String color = isWhite ? "white" : "black";
@@ -43,4 +49,4 @@ public class Pieces {
             throw new RuntimeException("Erro ao carregar sprite: " + path, e);
         }
     }
-}
+    }
